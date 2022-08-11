@@ -92,8 +92,20 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                             curState.inputFirst + input
                         }
                     }
+                } else if (input == "0") {
+                    if (curState.inputFirst == "-0" || curState.inputFirst == "0") {
+                        curState.inputFirst
+                    } else {
+                        curState.inputFirst + input
+                    }
                 } else {
-                    curState.inputFirst + input
+                    if (curState.inputFirst == "-0") {
+                        "-$input"
+                    } else if (curState.inputFirst == "0") {
+                        input
+                    } else {
+                        curState.inputFirst + input
+                    }
                 }
                 curState.copy(inputFirst = firstNum, showNum = firstNum)
             } else {
@@ -108,8 +120,20 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                             curState.inputSecond + input
                         }
                     }
+                } else if (input == "0") {
+                    if (curState.inputSecond == "-0" || curState.inputSecond == "0") {
+                        curState.inputSecond
+                    } else {
+                        curState.inputSecond + input
+                    }
                 } else {
-                    curState.inputSecond + input
+                    if (curState.inputSecond == "-0") {
+                        "-$input"
+                    } else if (curState.inputSecond == "0") {
+                        input
+                    } else {
+                        curState.inputSecond + input
+                    }
                 }
                 when (curState.opt) {
                     "÷" -> {
@@ -117,28 +141,48 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                             it.textColor = Color.White
                             it.backgroundColor = Orange
                         }
-                        curState.copy(inputSecond = secondNum, showNum = secondNum, actionData = act)
+                        curState.copy(
+                            inputSecond = secondNum,
+                            showNum = secondNum,
+                            actionData = act,
+                            action = ActionEnum.INPUT_SECOND_NUM
+                        )
                     }
                     "×" -> {
                         act[1]?.get(3)?.let {
                             it.textColor = Color.White
                             it.backgroundColor = Orange
                         }
-                        curState.copy(inputSecond = secondNum, showNum = secondNum, actionData = act)
+                        curState.copy(
+                            inputSecond = secondNum,
+                            showNum = secondNum,
+                            actionData = act,
+                            action = ActionEnum.INPUT_SECOND_NUM
+                        )
                     }
                     "-" -> {
                         act[2]?.get(3)?.let {
                             it.textColor = Color.White
                             it.backgroundColor = Orange
                         }
-                        curState.copy(inputSecond = secondNum, showNum = secondNum, actionData = act)
+                        curState.copy(
+                            inputSecond = secondNum,
+                            showNum = secondNum,
+                            actionData = act,
+                            action = ActionEnum.INPUT_SECOND_NUM
+                        )
                     }
                     "+" -> {
                         act[3]?.get(3)?.let {
                             it.textColor = Color.White
                             it.backgroundColor = Orange
                         }
-                        curState.copy(inputSecond = secondNum, showNum = secondNum, actionData = act)
+                        curState.copy(
+                            inputSecond = secondNum,
+                            showNum = secondNum,
+                            actionData = act,
+                            action = ActionEnum.INPUT_SECOND_NUM
+                        )
                     }
                     else -> curState.copy(inputSecond = secondNum, showNum = secondNum)
                 }
@@ -172,11 +216,59 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                     }
                 }
             }
-            if (curState.inputFirst.isEmpty()) {
+            if (curState.inputSecond.isNotEmpty()) {
+                when (curState.opt) {
+                    "÷" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() / curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "×" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() * curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "-" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() - curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "+" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() + curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                }
+            } else if (curState.inputFirst.isEmpty()) {
                 curState.copy(inputFirst = curState.showNum, opt = input, action = ActionEnum.OPERATOR, actionData = act)
             } else {
                 curState.copy(opt = input, action = ActionEnum.OPERATOR, actionData = act)
             }
+            curState
         }
         "×" -> {
             val act = mActionData
@@ -206,7 +298,55 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                     }
                 }
             }
-            if (curState.inputFirst.isEmpty()) {
+            if (curState.inputSecond.isNotEmpty()) {
+                when (curState.opt) {
+                    "÷" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() / curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "×" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() * curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "-" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() - curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "+" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() + curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    else -> curState
+                }
+            } else if (curState.inputFirst.isEmpty()) {
                 curState.copy(inputFirst = curState.showNum, opt = input, action = ActionEnum.OPERATOR, actionData = act)
             } else {
                 curState.copy(opt = input, action = ActionEnum.OPERATOR, actionData = act)
@@ -240,7 +380,55 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                     }
                 }
             }
-            if (curState.inputFirst.isEmpty()) {
+            if (curState.inputSecond.isNotEmpty()) {
+                when (curState.opt) {
+                    "÷" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() / curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "×" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() * curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "-" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() - curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "+" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() + curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    else -> curState
+                }
+            } else if (curState.inputFirst.isEmpty()) {
                 curState.copy(inputFirst = curState.showNum, opt = input, action = ActionEnum.OPERATOR, actionData = act)
             } else {
                 curState.copy(opt = input, action = ActionEnum.OPERATOR, actionData = act)
@@ -274,7 +462,55 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                     }
                 }
             }
-            if (curState.inputFirst.isEmpty()) {
+            if (curState.inputSecond.isNotEmpty()) {
+                when (curState.opt) {
+                    "÷" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() / curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "×" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() * curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "-" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() - curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    "+" -> {
+                        val num = getShowNum((curState.inputFirst.toFloat() + curState.inputSecond.toFloat()).toString())
+                        curState.copy(
+                            inputFirst = num,
+                            opt = input,
+                            action = ActionEnum.OPERATOR,
+                            actionData = act,
+                            showNum = num,
+                            inputSecond = ""
+                        )
+                    }
+                    else -> curState
+                }
+            } else if (curState.inputFirst.isEmpty()) {
                 curState.copy(inputFirst = curState.showNum, opt = input, action = ActionEnum.OPERATOR, actionData = act)
             } else {
                 curState.copy(opt = input, action = ActionEnum.OPERATOR, actionData = act)
@@ -282,7 +518,38 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
         }
         "=" -> {
             if (curState.opt == null || curState.inputFirst.isEmpty() || curState.inputSecond.isEmpty()) {
-                curState
+                if (curState.opt != null) {
+                    val act = mActionData
+                    when (curState.opt) {
+                        "÷" -> {
+                            act[0]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "×" -> {
+                            act[1]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "-" -> {
+                            act[2]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "+" -> {
+                            act[3]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                    }
+                    curState.copy(inputFirst = "", actionData = act, action = ActionEnum.IDLE)
+                } else {
+                    curState.copy(inputFirst = "", action = ActionEnum.IDLE)
+                }
             } else {
                 if (curState.inputFirst.endsWith(".")) {
                     curState.copy(inputFirst = curState.inputFirst.replace(".", ""))
@@ -319,7 +586,105 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                         opt = null,
                         inputSecond = ""
                     )
-                    else -> curState
+                    else -> curState.copy(inputFirst = "", action = ActionEnum.IDLE)
+                }
+            }
+        }
+        "AC" -> {
+            when (curState.action) {
+                ActionEnum.IDLE -> {
+                    curState.copy(inputFirst = "", showNum = "0")
+                }
+                ActionEnum.OPERATOR -> {
+                    val act = mActionData
+                    when (curState.opt) {
+                        "÷" -> {
+                            act[0]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "×" -> {
+                            act[1]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "-" -> {
+                            act[2]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                        "+" -> {
+                            act[3]?.get(3)?.let {
+                                it.textColor = Color.White
+                                it.backgroundColor = Orange
+                            }
+                        }
+                    }
+                    curState.copy(inputFirst = "", showNum = "0", actionData = act, action = ActionEnum.IDLE, opt = null)
+                }
+                ActionEnum.INPUT_SECOND_NUM -> {
+                    curState.copy(inputFirst = "", showNum = "0", action = ActionEnum.IDLE, opt = null, inputSecond = "")
+                }
+            }
+        }
+        "+/-" -> {
+            when (curState.action) {
+                ActionEnum.IDLE -> {
+                    var num = curState.showNum
+                    num = if (num.startsWith("-")) {
+                        num.replace("-", "")
+                    } else {
+                        "-$num"
+                    }
+                    curState.copy(inputFirst = num, showNum = num)
+                }
+                ActionEnum.OPERATOR -> {
+                    var num = curState.inputSecond
+                    num = if (num.isEmpty() || num == "0") {
+                        "-0"
+                    } else {
+                        "0"
+                    }
+                    curState.copy(inputSecond = num, showNum = num)
+                }
+                ActionEnum.INPUT_SECOND_NUM -> {
+                    var num = curState.showNum
+                    num = if (num.startsWith("-")) {
+                        num.replace("-", "")
+                    } else {
+                        "-$num"
+                    }
+                    curState.copy(inputSecond = num, showNum = num)
+                }
+            }
+        }
+        "%" -> {
+            when (curState.action) {
+                ActionEnum.IDLE -> {
+                    if (curState.inputFirst.isEmpty()) {
+                        curState
+                    } else if (curState.inputFirst == "-0") {
+                        curState.copy(inputFirst = "", showNum = "0")
+                    } else {
+                        val num = (curState.inputFirst.toFloat() / 100).toString()
+                        curState.copy(inputFirst = num, showNum = num)
+                    }
+                }
+                ActionEnum.OPERATOR -> {
+                    curState
+                }
+                ActionEnum.INPUT_SECOND_NUM -> {
+                    if (curState.inputSecond.isEmpty()) {
+                        curState
+                    } else if (curState.inputSecond == "-0") {
+                        curState.copy(inputSecond = "", showNum = "0")
+                    } else {
+                        val num = (curState.inputSecond.toFloat() / 100).toString()
+                        curState.copy(inputSecond = num, showNum = num)
+                    }
                 }
             }
         }
@@ -330,14 +695,11 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
 fun getShowNum(primitiveNum: String): String {
     var res = primitiveNum
     if (res.endsWith(".0")) {
-        Log.d(TAG, "匹配到.0")
         res = res.replace(".0", "")
     }
     if (res.matches(Regex(".[1-9]+0+"))) {
-        Log.d(TAG, "匹配到.0尾缀")
         res = res.replace(Regex("0+$"), "")
     }
-    Log.d(TAG, "res:$res")
     return res
 }
 
@@ -406,8 +768,8 @@ data class ButtonProperty(
 /**
  * @property IDLE 默认状态
  * @property OPERATOR 用户点击了运算符
- * @property END 点击了等号
+ * @property INPUT_SECOND_NUM 用户输入了第二个操作数
  */
 enum class ActionEnum {
-    IDLE, OPERATOR, END
+    IDLE, OPERATOR, INPUT_SECOND_NUM
 }
