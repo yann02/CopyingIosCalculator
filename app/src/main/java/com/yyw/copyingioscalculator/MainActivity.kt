@@ -1,31 +1,28 @@
 package com.yyw.copyingioscalculator
 
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import com.yyw.copyingioscalculator.ActionEnum.*
+import com.yyw.copyingioscalculator.components.ControlPanel
+import com.yyw.copyingioscalculator.components.ResizeOutputView
 import com.yyw.copyingioscalculator.exprk.Expressions
-import com.yyw.copyingioscalculator.ui.theme.*
+import com.yyw.copyingioscalculator.ui.theme.CopyingIosCalculatorTheme
+import com.yyw.copyingioscalculator.ui.theme.DarkGray
+import com.yyw.copyingioscalculator.ui.theme.LightGray
+import com.yyw.copyingioscalculator.ui.theme.Orange
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -35,17 +32,21 @@ const val MAX_LENGTH_OF_SHOW = 9
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            CopyingIosCalculatorTheme {
-                CalculatorView()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContentView(ComposeView(this).apply {
+            consumeWindowInsets = false
+            setContent {
+                CopyingIosCalculatorTheme {
+                    CalculatorView()
+                }
             }
-        }
+        })
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreCalculatorView() {
+fun PreCalculatorViewWithTopAppBar() {
     CopyingIosCalculatorTheme {
         CalculatorView()
     }
@@ -58,88 +59,19 @@ fun CalculatorView() {
     }
     Column(
         Modifier
-            .background(color = Background)
+            .background(color = MaterialTheme.colors.background)
             .padding(10.dp)
     ) {
-        ShowResizeView(appState.showNum, appState.fontSizeOfShowNum) {
+        ResizeOutputView(appState.showNum, appState.fontSizeOfShowNum) {
             val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
             appState = appState.copy(fontSizeOfShowNum = textSize)
         }
-        Column(
-            Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .background(color = Color.Green)
-        ) {
-            appState.actionData.mapKeys { rowArr ->
-                Row(
-                    Modifier
-                        .weight(1f)
-                        .background(color = if (rowArr.key % 2 == 0) Color.Cyan else Color.Red),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    rowArr.value.map {
-                        InputButton(
-                            it.text,
-                            Modifier
-                                .weight(if (it.text == "0") 2f else 1f)
-                                .aspectRatio(if (it.text == "0") 2f else 1f)
-                                .clip(CircleShape)
-                                .background(color = it.backgroundColor),
-                            it.textColor
-                        ) {
-                            appState = calculate(appState, it.text)
-                        }
-                    }
-                }
-            }
+        ControlPanel(appState.actionData) {
+            appState = calculate(appState, it)
         }
     }
 }
 
-/**
- * 输入框
- * 支持自适应文字大小
- */
-@Composable
-fun ShowResizeView(showNum: String, textSize: Int, changeFontSize: () -> Unit) {
-    var readyToDraw by remember { mutableStateOf(false) }
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.3f)
-            .background(color = Color.Blue),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Surface(shape = RoundedCornerShape(8.dp), color = Color.Red) {
-            SelectionContainer {
-                Text(
-                    text = showNum,
-                    fontSize = textSize.sp,
-                    color = Color.White,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Visible,
-                    modifier = Modifier/*.background(color = Color.Green)*/
-                        .padding(horizontal = 14.dp)
-                        .drawWithContent {
-                            if (readyToDraw) {
-                                drawContent()
-                            }
-                        },
-                    onTextLayout = { textLayoutResult ->
-                        if (textLayoutResult.didOverflowWidth) {
-                            changeFontSize()
-                        } else {
-                            readyToDraw = true
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
 
 fun calculate(curState: AppStateUI, input: String): AppStateUI {
     return when (input) {
@@ -430,34 +362,6 @@ fun getShowNum(primitiveNum: String): String {
         res = res.replace(Regex("0+$"), "")
     }
     return res
-}
-
-@Composable
-fun InputButton(text: String, modifier: Modifier, textColor: Color = Color.Unspecified, onClick: () -> Unit = {}) {
-    Box(modifier = modifier.then(Modifier.clickable { onClick() }), contentAlignment = Alignment.Center) {
-        if (text == "0") {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text(
-                    text = text,
-                    color = textColor,
-                    fontSize = 40.sp,
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(color = Color.Red),
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.weight(1f))
-            }
-        } else {
-            Text(text = text, color = textColor, fontSize = 40.sp, modifier = Modifier.background(color = Color.Red))
-        }
-    }
 }
 
 val mActionData = mutableMapOf(
