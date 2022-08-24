@@ -1,16 +1,14 @@
 package com.yyw.copyingioscalculator
 
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Surface
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,14 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import com.yyw.copyingioscalculator.ActionEnum.*
 import com.yyw.copyingioscalculator.exprk.Expressions
-import com.yyw.copyingioscalculator.ui.theme.*
+import com.yyw.copyingioscalculator.ui.theme.CopyingIosCalculatorTheme
+import com.yyw.copyingioscalculator.ui.theme.DarkGray
+import com.yyw.copyingioscalculator.ui.theme.LightGray
+import com.yyw.copyingioscalculator.ui.theme.Orange
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -35,17 +38,21 @@ const val MAX_LENGTH_OF_SHOW = 9
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            CopyingIosCalculatorTheme {
-                CalculatorView()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContentView(ComposeView(this).apply {
+            consumeWindowInsets = false
+            setContent {
+                CopyingIosCalculatorTheme {
+                    CalculatorView()
+                }
             }
-        }
+        })
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PreCalculatorView() {
+fun PreCalculatorViewWithTopAppBar() {
     CopyingIosCalculatorTheme {
         CalculatorView()
     }
@@ -58,7 +65,7 @@ fun CalculatorView() {
     }
     Column(
         Modifier
-            .background(color = Background)
+            .background(color = MaterialTheme.colors.background)
             .padding(10.dp)
     ) {
         ShowResizeView(appState.showNum, appState.fontSizeOfShowNum) {
@@ -69,13 +76,11 @@ fun CalculatorView() {
             Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .background(color = Color.Green)
+                .systemBarsPadding()
         ) {
             appState.actionData.mapKeys { rowArr ->
                 Row(
-                    Modifier
-                        .weight(1f)
-                        .background(color = if (rowArr.key % 2 == 0) Color.Cyan else Color.Red),
+                    Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -108,35 +113,32 @@ fun ShowResizeView(showNum: String, textSize: Int, changeFontSize: () -> Unit) {
     Box(
         Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.3f)
-            .background(color = Color.Blue),
+            .fillMaxHeight(.3f),
         contentAlignment = Alignment.BottomEnd
     ) {
-        Surface(shape = RoundedCornerShape(8.dp), color = Color.Red) {
-            SelectionContainer {
-                Text(
-                    text = showNum,
-                    fontSize = textSize.sp,
-                    color = Color.White,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Visible,
-                    modifier = Modifier/*.background(color = Color.Green)*/
-                        .padding(horizontal = 14.dp)
-                        .drawWithContent {
-                            if (readyToDraw) {
-                                drawContent()
-                            }
-                        },
-                    onTextLayout = { textLayoutResult ->
-                        if (textLayoutResult.didOverflowWidth) {
-                            changeFontSize()
-                        } else {
-                            readyToDraw = true
+        SelectionContainer {
+            Text(
+                text = showNum,
+                fontSize = textSize.sp,
+                color = MaterialTheme.colors.secondary,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Visible,
+                modifier = Modifier/*.background(color = Color.Green)*/
+                    .padding(horizontal = 14.dp)
+                    .drawWithContent {
+                        if (readyToDraw) {
+                            drawContent()
                         }
+                    },
+                onTextLayout = { textLayoutResult ->
+                    if (textLayoutResult.didOverflowWidth) {
+                        changeFontSize()
+                    } else {
+                        readyToDraw = true
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -447,15 +449,13 @@ fun InputButton(text: String, modifier: Modifier, textColor: Color = Color.Unspe
                     text = text,
                     color = textColor,
                     fontSize = 40.sp,
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(color = Color.Red),
+                    modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
         } else {
-            Text(text = text, color = textColor, fontSize = 40.sp, modifier = Modifier.background(color = Color.Red))
+            Text(text = text, color = textColor, fontSize = 40.sp)
         }
     }
 }
