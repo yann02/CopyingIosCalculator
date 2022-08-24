@@ -17,5 +17,5 @@
 - 支持系统深色主题
 
 ## 直播教学版本
-> 记录20220807晚王老师（Android GDE）直播中参考IOS手机计算器的线上教学代码  
-> 直播版本代码查看分支[livecoding](https://github.com/yann02/CopyingIosCalculator/tree/livecoding)
+> 记录20220807晚王老师（Android GDE）直播中参考IOS手机计算器写的线上教学代码  
+> 直播版本的代码记录在[livecoding](https://github.com/yann02/CopyingIosCalculator/tree/livecoding)分支
