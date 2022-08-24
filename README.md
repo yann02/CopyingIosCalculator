@@ -2,9 +2,9 @@
 本项目在直播教学版本的基础上开发，功能和界面参考IOS手机上的计算器实现。
 
 ## 概要
-本项目基于Jetpack compose实现，计算能力使用[ExprK](https://github.com/Keelar/ExprK)
+本项目基于Jetpack compose实现，计算能力使用[ExprK](https://github.com/Keelar/ExprK)，支持基本的加减乘除四则运算功能。
 
-## 功能
+## 功能特点
 > 在live coding的基础上继续补充功能，使功能更接近IOS手机版计算器。具体如下：  
 - 使用Material主题，使按钮点击的时候有涟漪的效果
 - 支持小数、清空、正负数转换和%（当前数除以100）
