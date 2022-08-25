@@ -4,9 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -62,7 +60,11 @@ fun CalculatorView() {
             .background(color = MaterialTheme.colors.background)
             .padding(10.dp)
     ) {
-        ResizeOutputView(appState.showNum, appState.fontSizeOfShowNum) {
+        ResizeOutputView(
+            appState.showNum, appState.fontSizeOfShowNum, Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(.3f)
+        ) {
             val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
             appState = appState.copy(fontSizeOfShowNum = textSize)
         }
@@ -196,7 +198,8 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                 setActionDataToDefault(curState.opt!!)
                 curState.copy(action = INPUT_SECOND_NUM, showNum = showNum, fontSizeOfShowNum = 100)
             } else {
-                curState.copy(showNum = showNum, fontSizeOfShowNum = 100)
+//                curState.copy(showNum = showNum, fontSizeOfShowNum = 100)
+                curState.copy(showNum = showNum)
             }
         }
         else -> curState
