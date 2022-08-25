@@ -265,7 +265,18 @@ fun getFirstNum(inputFirst: String, showNum: String, opt: String): String {
         }
         else -> BigDecimal(0)
     }
-    return preRes.toString()
+    return getShowNum(preRes.toString())
+}
+
+fun getShowNum(primitiveNum: String): String {
+    var res = primitiveNum
+    if (res.endsWith(".0")) {
+        res = res.replace(".0", "")
+    }
+    if (res.matches(Regex("\\.[1-9]+0+"))) {
+        res = res.replace(Regex("0+$"), "")
+    }
+    return res
 }
 
 fun setActionDataToSelected(opt: String) {
