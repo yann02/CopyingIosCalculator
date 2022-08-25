@@ -2,7 +2,7 @@
 本项目在直播教学版本的基础上开发，功能和界面参考IOS手机上的计算器实现。
 
 ## 概要
-本项目基于Jetpack compose实现，计算能力使用[ExprK](https://github.com/Keelar/ExprK)，支持基本的加减乘除四则运算功能。  
+本项目基于Jetpack compose实现，计算能力使用[ExprK](https://github.com/Keelar/ExprK)，支持基本的加减乘除四则运算功能。计算器最多支持显示9位数字。    
 | Light Theme | Dark Theme |
 | ---         | ---        |
 | <img src="screenshots/light.png" width="320" alt="Light Theme"> | <img src="screenshots/dark.png" width="320" alt="Dark Theme"> |
@@ -15,6 +15,7 @@
 - 自动求值，当用户输入第一个数、运算符和第二个数以后，又直接点击了某个运算符，会对前面输入的内容进行运算，并重新赋值给第一个数
 - 顶部显示文本支持字体大小自适应，文本复制
 - 支持系统深色主题
+- 使用美式千分位计数显示结果，如：7777 -> 7,777
 
 ## 直播教学版本
 > 记录20220807晚王老师（Android GDE）直播中参考IOS手机计算器界面写的线上教学代码  
