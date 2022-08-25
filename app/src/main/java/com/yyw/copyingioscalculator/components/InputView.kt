@@ -17,15 +17,19 @@ import com.yyw.copyingioscalculator.ButtonProperty
 
 
 /**
- * 下部控制面板
+ * 下部控制（输入）面板
+ * @param actionData 输入面板的数据，含输入按钮文本和相关配色数据
+ * @param modifier 从外部设置组件的样式
+ * @param onClick 回调用户点击的事件
  */
 @Composable
-fun ControlPanel(actionData: MutableMap<Int, List<ButtonProperty>>, onClick: (String) -> Unit = {}) {
+fun ControlPanel(
+    actionData: MutableMap<Int, List<ButtonProperty>>,
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit = {}
+) {
     Column(
-        Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
-            .systemBarsPadding()
+        modifier = modifier
     ) {
         actionData.mapKeys { rowArr ->
             Row(
@@ -51,7 +55,13 @@ fun ControlPanel(actionData: MutableMap<Int, List<ButtonProperty>>, onClick: (St
     }
 }
 
-
+/**
+ * 输入按钮
+ * @param text 按钮文本
+ * @param modifier 传入样式
+ * @param textColor 设置文本字体颜色
+ * @param onClick 点击事件的回调
+ */
 @Composable
 fun InputButton(text: String, modifier: Modifier, textColor: Color = Color.Unspecified, onClick: () -> Unit = {}) {
     Box(modifier = modifier.then(Modifier.clickable { onClick() }), contentAlignment = Alignment.Center) {

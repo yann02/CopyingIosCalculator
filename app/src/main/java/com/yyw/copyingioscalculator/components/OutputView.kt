@@ -18,7 +18,7 @@ import com.yyw.copyingioscalculator.ui.theme.CopyingIosCalculatorTheme
 
 
 /**
- * 上部输入框
+ * 上部输出框，显示结果
  * 支持自适应文字大小
  * @param showNum 显示的输入内容或计算结果
  * @param textSize 设置文本字体大小

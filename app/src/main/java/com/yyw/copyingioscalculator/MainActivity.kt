@@ -22,7 +22,6 @@ import com.yyw.copyingioscalculator.ui.theme.DarkGray
 import com.yyw.copyingioscalculator.ui.theme.LightGray
 import com.yyw.copyingioscalculator.ui.theme.Orange
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 const val TAG = "wyy"
 const val MAX_LENGTH_OF_SHOW = 9
@@ -68,7 +67,12 @@ fun CalculatorView() {
             val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
             appState = appState.copy(fontSizeOfShowNum = textSize)
         }
-        ControlPanel(appState.actionData) {
+        ControlPanel(
+            appState.actionData, Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .systemBarsPadding()
+        ) {
             appState = calculate(appState, it)
         }
     }
@@ -198,7 +202,6 @@ fun calculate(curState: AppStateUI, input: String): AppStateUI {
                 setActionDataToDefault(curState.opt!!)
                 curState.copy(action = INPUT_SECOND_NUM, showNum = showNum, fontSizeOfShowNum = 100)
             } else {
-//                curState.copy(showNum = showNum, fontSizeOfShowNum = 100)
                 curState.copy(showNum = showNum)
             }
         }
@@ -262,14 +265,7 @@ fun getFirstNum(inputFirst: String, showNum: String, opt: String): String {
         }
         else -> BigDecimal(0)
     }
-    val preResStr = preRes.toString()
-    val res = if (preResStr.contains(".")) {
-        val preResArrByDot = preResStr.split(".")
-        preRes.setScale(preResStr.length - preResArrByDot[0].replace("-", "").length - 1, RoundingMode.UP)
-    } else {
-        preRes
-    }
-    return getShowNum(res.toString())
+    return preRes.toString()
 }
 
 fun setActionDataToSelected(opt: String) {
@@ -354,17 +350,6 @@ fun getInputNum(showNum: String, input: String): String {
             else -> showNum + input
         }
     }
-}
-
-fun getShowNum(primitiveNum: String): String {
-    var res = primitiveNum
-    if (res.endsWith(".0")) {
-        res = res.replace(".0", "")
-    }
-    if (res.matches(Regex("\\.[1-9]+0+"))) {
-        res = res.replace(Regex("0+$"), "")
-    }
-    return res
 }
 
 val mActionData = mutableMapOf(
