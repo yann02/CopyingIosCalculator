@@ -75,7 +75,6 @@ fun CalculatorView(vm: MainViewModel = viewModel()) {
                 appState.showNum, appState.fontSizeOfShowNum, Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(.3f)
-                    .background(color = Color.Red)
             ) {
                 val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
                 vm.updateAppState(appState.copy(fontSizeOfShowNum = textSize))
@@ -85,7 +84,6 @@ fun CalculatorView(vm: MainViewModel = viewModel()) {
                     .navigationBarsPadding()
                     .fillMaxHeight()
                     .fillMaxWidth()
-                    .background(color = Color.Blue)
             ) {
                 vm.updateAppState(calculate(appState, it))
             }
