@@ -66,23 +66,26 @@ fun CalculatorView(vm: MainViewModel = viewModel()) {
     val appState by vm.mAppState.collectAsState()
     Column(
         Modifier
+            .fillMaxSize()
             .background(color = MaterialTheme.colors.background)
-            .padding(10.dp)
+            .padding(horizontal = 10.dp)
     ) {
         if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             ResizeOutputView(
                 appState.showNum, appState.fontSizeOfShowNum, Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(.3f)
+                    .background(color = Color.Red)
             ) {
                 val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
                 vm.updateAppState(appState.copy(fontSizeOfShowNum = textSize))
             }
             ControlPanel(
                 appState.actionData, Modifier
+                    .navigationBarsPadding()
                     .fillMaxHeight()
                     .fillMaxWidth()
-                    .systemBarsPadding()
+                    .background(color = Color.Blue)
             ) {
                 vm.updateAppState(calculate(appState, it))
             }
@@ -90,14 +93,15 @@ fun CalculatorView(vm: MainViewModel = viewModel()) {
             LandScapeOutputView(
                 appState.showNum, Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(.2f)
-                    .systemBarsPadding()
+                    .fillMaxHeight(.25f)
+                    .navigationBarsPadding()
+                    .statusBarsPadding()
             )
             LandScapeControlPanel(
                 appState.actionData, Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
-                    .systemBarsPadding()
+                    .navigationBarsPadding()
             ) {
                 vm.updateAppState(calculate(appState, it))
             }

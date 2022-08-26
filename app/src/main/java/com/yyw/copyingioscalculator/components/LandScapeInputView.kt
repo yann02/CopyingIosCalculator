@@ -33,7 +33,7 @@ fun LandScapeControlPanel(
     ) {
         actionData.mapKeys { rowArr ->
             Row(
-                Modifier.weight(1f),
+                Modifier.weight(1f).padding(vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -42,6 +42,7 @@ fun LandScapeControlPanel(
                         it.text,
                         Modifier
                             .weight(if (it.text == "0") 2f else 1f)
+                            .fillMaxHeight()
                             .clip(CircleShape)
                             .background(color = it.backgroundColor),
                         it.textColor
@@ -75,14 +76,14 @@ fun LandScapeInputButton(text: String, modifier: Modifier, textColor: Color = Co
                 Text(
                     text = text,
                     color = textColor,
-                    fontSize = 40.sp,
+                    fontSize = 20.sp,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
         } else {
-            Text(text = text, color = textColor, fontSize = 40.sp)
+            Text(text = text, color = textColor, fontSize = 20.sp)
         }
     }
 }

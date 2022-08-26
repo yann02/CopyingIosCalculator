@@ -25,12 +25,12 @@ import com.yyw.copyingioscalculator.ui.theme.CopyingIosCalculatorTheme
 fun LandScapeOutputView(showNum: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.CenterEnd
     ) {
         SelectionContainer {
             Text(
                 text = showNum.numFormatForUS(),
-                fontSize = 50.sp,
+                fontSize = 40.sp,
                 color = MaterialTheme.colors.secondary,
                 maxLines = 1,
                 softWrap = false,

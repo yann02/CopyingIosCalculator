@@ -33,7 +33,7 @@ fun ControlPanel(
     ) {
         actionData.mapKeys { rowArr ->
             Row(
-                Modifier.weight(1f),
+                Modifier.weight(1f).background(color = Color.Green),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
