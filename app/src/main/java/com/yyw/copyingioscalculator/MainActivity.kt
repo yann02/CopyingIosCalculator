@@ -6,15 +6,21 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yyw.copyingioscalculator.ActionEnum.*
 import com.yyw.copyingioscalculator.components.ControlPanel
+import com.yyw.copyingioscalculator.components.LandScapeControlPanel
+import com.yyw.copyingioscalculator.components.LandScapeOutputView
 import com.yyw.copyingioscalculator.components.ResizeOutputView
 import com.yyw.copyingioscalculator.exprk.Expressions
 import com.yyw.copyingioscalculator.ui.theme.CopyingIosCalculatorTheme
@@ -22,6 +28,11 @@ import com.yyw.copyingioscalculator.ui.theme.DarkGray
 import com.yyw.copyingioscalculator.ui.theme.LightGray
 import com.yyw.copyingioscalculator.ui.theme.Orange
 import java.math.BigDecimal
+import kotlin.collections.List
+import kotlin.collections.MutableMap
+import kotlin.collections.contains
+import kotlin.collections.listOf
+import kotlin.collections.mutableMapOf
 
 const val TAG = "wyy"
 const val MAX_LENGTH_OF_SHOW = 9
@@ -50,30 +61,46 @@ fun PreCalculatorViewWithTopAppBar() {
 }
 
 @Composable
-fun CalculatorView() {
-    var appState by remember {
-        mutableStateOf(AppStateUI())
-    }
+fun CalculatorView(vm: MainViewModel = viewModel()) {
+    val configuration = LocalConfiguration.current
+    val appState by vm.mAppState.collectAsState()
     Column(
         Modifier
             .background(color = MaterialTheme.colors.background)
             .padding(10.dp)
     ) {
-        ResizeOutputView(
-            appState.showNum, appState.fontSizeOfShowNum, Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(.3f)
-        ) {
-            val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
-            appState = appState.copy(fontSizeOfShowNum = textSize)
-        }
-        ControlPanel(
-            appState.actionData, Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .systemBarsPadding()
-        ) {
-            appState = calculate(appState, it)
+        if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ResizeOutputView(
+                appState.showNum, appState.fontSizeOfShowNum, Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.3f)
+            ) {
+                val textSize = (appState.fontSizeOfShowNum * 0.9).toInt()
+                vm.updateAppState(appState.copy(fontSizeOfShowNum = textSize))
+            }
+            ControlPanel(
+                appState.actionData, Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .systemBarsPadding()
+            ) {
+                vm.updateAppState(calculate(appState, it))
+            }
+        } else {
+            LandScapeOutputView(
+                appState.showNum, Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.2f)
+                    .systemBarsPadding()
+            )
+            LandScapeControlPanel(
+                appState.actionData, Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .systemBarsPadding()
+            ) {
+                vm.updateAppState(calculate(appState, it))
+            }
         }
     }
 }
