@@ -33,9 +33,11 @@ fun LandScapeControlPanel(
     ) {
         actionData.mapKeys { rowArr ->
             Row(
-                Modifier.weight(1f).padding(vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                Modifier
+                    .weight(1f)
+                    .padding(vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically/*,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)*/
             ) {
                 rowArr.value.map {
                     LandScapeInputButton(
@@ -43,6 +45,7 @@ fun LandScapeControlPanel(
                         Modifier
                             .weight(if (it.text == "0") 2f else 1f)
                             .fillMaxHeight()
+                            .padding(horizontal = 5.dp)
                             .clip(CircleShape)
                             .background(color = it.backgroundColor),
                         it.textColor
@@ -71,7 +74,7 @@ fun LandScapeInputButton(text: String, modifier: Modifier, textColor: Color = Co
                     .fillMaxWidth()
                     .fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(18.dp)
             ) {
                 Text(
                     text = text,
