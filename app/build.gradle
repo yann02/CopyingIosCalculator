@@ -58,6 +58,8 @@ dependencies {
     //  about status bar
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.17.0'
     implementation 'androidx.compose.foundation:foundation-layout:1.2.0-rc03@aar'
+
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
