@@ -34,8 +34,7 @@ fun ControlPanel(
         actionData.mapKeys { rowArr ->
             Row(
                 Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 rowArr.value.map {
                     InputButton(
@@ -43,6 +42,7 @@ fun ControlPanel(
                         Modifier
                             .weight(if (it.text == "0") 2f else 1f)
                             .aspectRatio(if (it.text == "0") 2f else 1f)
+                            .padding(5.dp)
                             .clip(CircleShape)
                             .background(color = it.backgroundColor),
                         it.textColor
@@ -71,7 +71,7 @@ fun InputButton(text: String, modifier: Modifier, textColor: Color = Color.Unspe
                     .fillMaxWidth()
                     .fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
                 Text(
                     text = text,
